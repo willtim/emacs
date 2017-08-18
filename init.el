@@ -1,6 +1,7 @@
-;;
+;;; init.el -*- lexical-binding: t; -*-
+
 ;; Tim Williams' emacs configuration
-;; Last Updated: 1st September 2016
+;; Last Updated: August 2017
 
 ;; disable parts of UI early in startup to avoid momentary display
 (tool-bar-mode -1)
@@ -25,55 +26,47 @@
 
 ;; set in Xresources
 ;;(set-default-font "Source Code Pro 11")
-(set-default-font "Consolas 15")
-(set-face-attribute 'default nil :font "Consolas 15" )
-(set-frame-font "Consolas 15" nil t)
+(set-default-font "Consolas 18")
+(set-face-attribute 'default nil :font "Consolas 18" )
+(set-frame-font "Consolas 18" nil t)
 
-(require 'apropospriate)
-(load-theme 'apropospriate-dark t)
-;; or
-;;(load-theme 'apropospriate-light t)
-
-;; apropospriate theme tweak for TN panels at work.
-;; I want to better see the border of an inactive window
-(set-face-attribute 'mode-line-inactive nil
-                    :box '(:line-width 4 :color "#303030" :style nil)
-                    :background "#474747" :foreground "#9E9E9E" :height 0.95)
-
-;; (load-theme 'zenburn t)
-;; (load-theme 'solarized-dark t)
-
-;; inverse video settings
-;; (setq inverse-video t)
-;; (setq mode-line-inverse-video nil)
-
-;; TODO this is needed for emacs 23 in Ubuntu 12.04
-;; (x-handle-reverse-video (selected-frame) '((reverse . t)))
-
-;; transparency with xcompmgr/compton
-;; (set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
-;; (set-frame-parameter (selected-frame) 'alpha '(85 85))
-;; (add-to-list 'default-frame-alist '(alpha 85 85))
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 (add-to-list 'default-frame-alist '(alpha 100 100))
 
-;; clean-up modeline - not needed for apropospriate theme
-;; (set-face-foreground 'mode-line "#a6e22e")
-;; (set-face-background 'mode-line "#1a2022")
-;; (set-face-background 'mode-line-inactive "black")
-;; (set-face-foreground 'mode-line-inactive "white")
-;; disable horrible looking 3D mode-line
-;; (set-face-attribute 'mode-line nil :box nil)
-;; (set-face-attribute 'mode-line-inactive nil :box nil)
+;; load this early
+(use-package solarized-theme
+  :ensure t
+  :demand
+  :bind
+  ;; toggle light/dark theme
+  ("C-c t" . toggle-dark-light-theme)
+
+  :config
+  ;; Don't change the font for some headings and titles
+  (setq solarized-use-variable-pitch nil)
+  (setq solarized-high-contrast-mode-line t)
+  ;; Don't change size of org-mode headlines (but keep other size-changes)
+  (setq solarized-scale-org-headlines nil)
+
+  ;; support toggle light/dark
+  (defun toggle-dark-light-theme ()
+    (interactive)
+    (if (eq active-theme 'solarized-light)
+        (setq active-theme 'solarized-dark)
+      (setq active-theme 'solarized-light))
+    (load-theme active-theme))
+
+  (setq active-theme 'solarized-light)
+  (load-theme 'solarized-light t)
+  )
 
 ;; undo/redo window configurations
 (winner-mode 1)
 
-;; consistent with gnome terminals
 ;; (set-scroll-bar-mode 'right)
 
 ;; X11 Copy & Paste to/from Emacs
-;; (setq x-select-enable-clipboard t)
+(setq x-select-enable-clipboard t)
 
 ;; Prefer UTF-8 encoding
 (prefer-coding-system 'utf-8)
@@ -94,40 +87,21 @@
     (setq buffer-file-coding-system 'utf-8-unix)
     ))
 
-;; Session management via Emacs Desktop
-;; NB. file-related behavior
-(require 'desktop)
-(setq desktop-path '("~/.emacs.d/"))
-(setq desktop-dirname "~/.emacs.d/")
-(setq desktop-base-file-name "emacs-desktop")
-(desktop-save-mode 1)
-;; (defun my-desktop-save ()
-;;    (interactive)
-;;    ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
-;;    (if (eq (desktop-owner) (emacs-pid))
-;;        (desktop-save desktop-dirname)))
-;; (add-hook 'auto-save-hook 'my-desktop-save)
-
-
 ;; mouse settings
 (mouse-wheel-mode t)  	                            ;; Make the mouse wheel work.
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil)            ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't)                  ;; scroll window under mouse
 
-;; Various toys.
 (blink-cursor-mode nil) ;; Don't blink cursor.
 (display-time)		;; Always display the time.
 (column-number-mode t)	;; Column numbers on.
 (which-function-mode t) ;; show in mode line
-(set-face-foreground 'which-func "yellow")
-
 (show-paren-mode t)	;; Automatically highlight parens.
 (setq show-paren-delay 0)
-;; (setq show-paren-style 'expression)	   ; alternatives are 'parenthesis' and 'mixed'
+(setq show-paren-style 'expression) ; alternatives are 'parenthesis' and 'mixed'
 
-(global-font-lock-mode t)               ; Syntax highlighting by default
-;; (iswitchb-mode 1)                    ; Use iswitchb. USE IDO INSTEAD
+(global-font-lock-mode t) ; Syntax highlighting by default
 
 ;; Emacs will not automatically add new lines
 (setq next-line-add-newlines nil)
@@ -151,16 +125,7 @@
 
 ;; Buffer focus follows mouse
 ;; * This isn't really needed and can cause accidental switch, esp. on laptops.
-(setq mouse-autoselect-window nil)
-
-;; Use shift-arrow to jump between buffers
-;; (windmove-default-keybindings)
-
-;; F11 full screen - when not using xmonad
-;; (defun switch-full-screen ()
-;;       (interactive)
-;;       (shell-command "wmctrl -r :ACTIVE: -btoggle,fullscreen"))
-;; (global-set-key [f11] 'switch-full-screen)
+(setq mouse-autoselect-window 't)
 
 ;; visual-line-mode allows reflow of text according to buffer width
 ;; and behaves as if there were breaks
@@ -170,49 +135,11 @@
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
-;; Automatically introduces closing parenthesis, brackets, braces, etc.
-(electric-pair-mode 0) ;; turn-off, use paredit "M-(" etc instead.
-
-;; C-x C-j for open dired at current
-(require 'dired-x)
-(setq-default dired-omit-files-p t) ; Buffer-local variable
-(setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")) ;; omit dotfiles
-
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'turn-on-flyspell)
-
-;; These should be loaded on startup rather than autoloaded on demand
-;; since they are likely to be used in every session
-(require 'smex)
-(smex-initialize)
-(require 'cl)
-(require 'saveplace)
-(require 'ffap)
-(require 'ansi-color)
-(require 'recentf)
-(require 'linum)
-
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator "/")
-(setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
-(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
-
 ;; whitespace handling
 (setq-default show-trailing-whitespace t) ; See the trailing whitespace.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'diff-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 (add-hook 'sr-mode-hook (lambda () (setq show-trailing-whitespace nil)))
-
-;; local packages
-(add-to-list 'load-path "~/.emacs.d/lisp" load-path)
-(require 'markerpen)
-(require 'tim-functions)
-(require 'tim-defaults)
-(require 'tim-shell)
-(require 'tim-utils)
-(require 'tim-bindings)
-(require 'tim-haskell)
 
 ;; inserting text while the mark is active causes the selected text to be deleted first.
 (delete-selection-mode 1)
@@ -221,28 +148,12 @@
 (add-to-list 'safe-local-variable-values '(whitespace-line-column . 80))
 
 ;; Set this to whatever browser you use
-(setq browse-url-browser-function 'browse-default-windows-browser)
+;; CHROME BROWSER SUPPORT
+;;(setq browse-url-browser-function 'browse-url-generic
+;;      browse-url-generic-program "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
 
 ;; Transparently open compressed files
 (auto-compression-mode t)
-
-;; Enable syntax highlighting for older Emacsen that have it off
-(global-font-lock-mode t)
-
-;; Save a list of recent files visited.
-(recentf-mode 1)
-(setq recentf-max-saved-items 50)
-
-;; ido-mode is awesome but sometimes it gets in the way. To temporarily disable it,
-;; press C-f while the prompt is open. You can also press C-j while it's still enabled to
-;; force the creation of the name.
-(when (> emacs-major-version 21)
-  (ido-mode t)
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point 'guess
-        ido-max-prospects 10))
 
 (set-default 'indent-tabs-mode nil)
 (set-default 'indicate-empty-lines t)
@@ -261,9 +172,6 @@
   dired-listing-switches "-alh"
 )
 
-;; useful windows bindings
-(require 'w32-browser)
-
 (add-hook
  'dired-mode-hook
  (lambda ()
@@ -271,39 +179,85 @@
    (define-key dired-mode-map "z" 'dired-zip-files)
    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
    (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
-   (define-key dired-mode-map (kbd "M-RET") 'dired-w32-browser) ;; to open files with windows
-   (define-key dired-mode-map (kbd "W") 'dired-w32explore) ;; to open directories in Win explorer
-   (define-key dired-mode-map (kbd "E") 'wdired-change-to-wdired-mode)
+;   (define-key dired-mode-map (kbd "M-RET") 'dired-w32-browser) ;; to open files with windows
+;   (define-key dired-mode-map (kbd "W") 'dired-w32explore) ;; to open directories in Win explorer
+;   (define-key dired-mode-map (kbd "E") 'wdired-change-to-wdired-mode)
    ))
 
-;; completion pop-ups
-(require 'company)
-(company-mode-on)
+;; local packages
+(add-to-list 'load-path "~/.emacs.d/lisp" load-path)
+(require 'markerpen)
+(require 'tim-utils)
+(require 'tim-haskell)
 
-;; display available keys after 1 second delay
-(which-key-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Setup key bindings unrelated to any packages
 
-;; Ivy
-;;;;;;;;
-(require 'ivy)
-;; (ivy-mode 1) ; breaks rgrep
-(setq ivy-height 10)
-(setq ivy-use-virtual-buffers t)
-(setq ivy-display-style 'fancy)
+(bind-keys
+ ("M-o"     . other-window)
+ ("C-x o"   . switch-window-then-swap-buffer)
+ ("M-O"     . other-frame)
+ ("C-x TAB" . indent-rigidly) ;; indent-rigidly
+ ("M-p"     . backward-paragraph) ;; paragraph navigation
+ ("M-n"     . forward-paragraph)
+ ("C-M-h"   . backward-kill-word) ;; You know, like Readline.
+ ("C-x \\"  . align-regexp) ;; Align your code in a pretty way.
+ ("M-/"     . dabbrev-expand) ;; Completion - was hippie-expand
+ ("M-c"     . toggle-char-case) ;; set this key to a similar but saner idea
+ ("C-c C-g" . vc-git-grep2) ;; seems as fast as "ag"
+ ("M-X"     . smex-major-mode-commands)
+ ("C-c r"   . revert-buffer)
+ ("C-c n"   . cleanup-buffer) ;; Perform general cleanup.
+ ("C-<f5>"  . linum-mode) ;; add line-numbers to buffer
+ ("C-h a"   . apropos) ;; Help should search more than just commands
+ ("C-c b"   . copy-file-name-to-clipboard)) ;; copy file name to clipboard
 
-(require 'swiper)
-(require 'counsel)
-;; swiper, swiper-multi and swiper-all.
-;;  counsel-M-x, counsel-git-grep, and counsel-grep-or-swiper.
+;; Font size
+(bind-keys
+ ("C-+" . text-scale-increase)
+ ("C--" . text-scale-decrease))
 
-(setq completion-in-region-function 'ivy-completion-in-region)
-(setq magit-completing-read-function 'ivy-completing-read)
+;; Use regex searches by default.
+(bind-keys
+  ("C-s"   . isearch-forward-regexp)
+  ("\C-r"  . isearch-backward-regexp)
+  ("C-M-s" . isearch-forward)
+  ("C-M-r" . isearch-backward))
+
+;; Window re-sizing - that is friendly with org-mode
+(bind-keys
+  ("C-}" . enlarge-window-horizontally)
+  ("C-{" . shrink-window-horizontally)
+  ("C-^" . enlarge-window))
+
+;; Start a regular shell
+;; C-x m orginallytaken by 'compose-mail'
+(bind-key "C-x m" 'eshell)
+
+;; Activate occur easily inside isearch
+(define-key isearch-mode-map (kbd "C-c C-o")
+  (lambda () (interactive)
+    (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string (regexp-quote isearch-string))))))
+
+;; this supports both scrolling horizontally and stops the
+;; denial-of-service logging when vertically scrolling with my
+;; trackball.
+(defun tim/scroll-right ()
+  (interactive)
+  (scroll-right 1))
+(defun tim/scroll-left ()
+  (interactive)
+  (scroll-left 1))
+(global-set-key [wheel-left]  #'tim/scroll-left)
+(global-set-key [wheel-right] #'tim/scroll-right)
+
 
 
 ;; eDiff
 ;;;;;;;;
 
-(setq ediff-diff-program "C:/Users/timwi/AppData/Roaming/local/bin/pdiff.exe")
+;;(setq ediff-diff-program "C:/Users/timwi/AppData/Roaming/local/bin/pdiff.exe")
 
 ;; Do everything in one frame.
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -340,132 +294,273 @@
 ;; Default to unified diffs
 (setq diff-switches "-u -w")
 
-;; upgraded flyspell
-(add-to-list 'load-path "~/.emacs.d/opt/flyspell-1_7p.el" load-path)
-(setq table-disable-incompatibility-warning t)
+;; Ben's suggestion to stop too much output killing emacs
+(setq comint-buffer-maximum-size 9999)
 
-;; Sunrise
-;;tweak faces for paths
-(require 'sunrise-commander)
-(set-face-attribute 'sr-active-path-face nil
-                    :background "black")
-(set-face-attribute 'sr-passive-path-face nil
-                    :background "black")
-
-;; This nasty hack of a package breaks things
-;; (require 'openwith)
-;; (openwith-mode t)
-
-
-;; tree undo
-;; (setq load-path (cons "~/.emacs.d/opt/undo-tree" load-path))
-;; (require 'undo-tree)
-;;(global-undo-tree-mode)
-
-;; markdown
-(require 'markdown-mode)
-(autoload 'markdown-mode "markdown-mode"
-      "Major mode for editing Markdown files" t)
-     (setq auto-mode-alist
-        (cons '("\\.md" . markdown-mode) auto-mode-alist))
-
-;; pandoc
-(add-hook 'markdown-mode-hook 'turn-on-pandoc)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; org-mode.org
-
-(require 'org-install)
-(setq org-use-fast-todo-selection t)
-(setq org-log-done 'time)
-
-;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
-;; (add-hook 'org-mode-hook 'toggle-truncate-lines)
-(add-hook 'org-mode-hook 'visual-line-mode)
-
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
-(setq org-default-notes-file "~/org/notes.org")
-(define-key global-map "\C-cc" 'org-capture)
-
-;(setq org-mobile-files (quote ("notes.org")))
-;(setq org-mobile-directory "~/Dropbox/MobileOrg")
-
-(org-babel-do-load-languages
- 'org-babel-load-languages '((dot . t) (plantuml . t)))
-
-(setq org-plantuml-jar-path
-      (expand-file-name "~/org/plantuml.jar"))
-
-(setq org-capture-templates
-   '(("t" "Todo" entry (file+headline "~/Dropbox/MobileOrg/gtd.org" "In-Box")
-          "* TODO %?\n  %i\n  %a")
-     ("j" "Journal" entry (file+datetree "~/Dropbox/MobileOrg/journal.org")
-          "* %?\nEntered: %U\n  %i\n  %a")))
-
-
-(setq org-agenda-files (list "~/Dropbox/MobileOrg/gtd.org"
-                             "~/Dropbox/MobileOrg/tim-calendar.org"
-                             "~/Dropbox/MobileOrg/karen-calendar.org"
-                             ))
-
-(setq org-agenda-custom-commands
-           '(("D" "Daily Action List"
-      (
-           (agenda "" ((org-agenda-ndays 1)
-                       (org-agenda-sorting-strategy
-                        (quote ((agenda time-up priority-down tag-up) )))
-                       (org-deadline-warning-days 0)
-                       ))))))
-
-(require 'calfw)
-(require 'calfw-org)
-
-(require 'org-gcal)
-(setq org-gcal-client-id "475236531230-d4cue8pvr2cqe2mibdqk6l21c3q0oeel.apps.googleusercontent.com"
-      org-gcal-client-secret "oSbcQr0FlkzxjZeg269Zd1zN"
-      org-gcal-file-alist '(("tim.philip.williams@gmail.com" .  "~/Dropbox/MobileOrg/tim-calendar.org")
-                            ("karencornish@hotmail.co.uk"    .  "~/Dropbox/MobileOrg/karen-calendar.org")
-                            ))
-(setq browse-url-browser-function 'browse-url-default-windows-browser)
-
-;; paredit hooks
-;;(add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-;;(add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-;;(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
+(put 'upcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; nxml
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
 (setq auto-mode-alist
       (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode) auto-mode-alist))
 
-;; Ben's suggestion to stop too much output killing emacs
-(setq comint-buffer-maximum-size 9999)
 
-; Agda
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Agda mode code which should run before the first Agda file is
-;; loaded
-;; (add-to-list 'load-path "~/.cabal/share/Agda-2.3.2/emacs-mode" load-path)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Packages
 
-;; (autoload 'agda2-mode "agda2-mode"
-;;   "Major mode for editing Agda files (version ≥ 2)." t)
-;; (add-to-list 'auto-mode-alist '("\\.l?agda\\'" . agda2-mode))
-;; (modify-coding-system-alist 'file "\\.l?agda\\'" 'utf-8)
-;; (provide 'agda2)
-;; (put 'downcase-region 'disabled nil)
+;; Session management via Emacs Desktop
+;; NB. file-related behavior
+(use-package desktop
+  :config
+  (setq desktop-path '("~/.emacs.d/"))
+  (setq desktop-dirname "~/.emacs.d/")
+  (setq desktop-base-file-name "emacs-desktop")
+  (desktop-save-mode 1)
+  )
 
-;; fsharp
-;; (unless (package-installed-p 'fsharp-mode)
-;;   (package-install 'fsharp-mode))
-;; (require 'fsharp-mode)
+(use-package flyspell
+  :ensure t
+  :config
+  (setq table-disable-incompatibility-warning t)
+  (setq ispell-dictionary "british")
+  (add-hook 'text-mode-hook 'turn-on-flyspell)
+  )
+
+;; C-x C-j for open dired at current
+(use-package dired-x
+  :config
+  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")) ;; omit dotfiles
+  )
+
+(use-package smex
+  :ensure t
+  :init (smex-initialize))
+(use-package cl)
+(use-package saveplace)
+(use-package ffap)
+(use-package ansi-color)
+
+;; Save a list of recent files visited.
+(use-package recentf
+  :config
+  (setq recentf-save-file "~/.emacs.d/recentf"
+        recentf-max-saved-items 500
+        recentf-max-menu-items 15
+        ;; disable recentf-cleanup on Emacs start, because it can cause
+        ;; problems with remote files
+        recentf-auto-cleanup 'never)
+  (recentf-mode +1))
+
+(use-package linum)
+
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'reverse)
+  (setq uniquify-separator "/")
+  (setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
+  (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+  )
+
+(use-package drag-stuff
+  :ensure t
+  :init (drag-stuff-global-mode 1)
+  :bind
+  ("S-M-p" . drag-stuff-up)
+  ("S-M-n" . drag-stuff-down)
+  )
+
+(use-package paredit
+  :ensure t
+  :bind
+  ("C-M-u" . paredit-backward-up)
+  ("C-M-n" . paredit-forward-up)
+  ("M-S"   . paredit-splice-sexp)
+  ("M-R"   . paredit-raise-sexp)
+  ("M-("   . paredit-wrap-round)
+  ("M-["   . paredit-wrap-square)
+  ("M-{"   . paredit-wrap-curly)
+  ("M-\""  . paredit-meta-doublequote)
+  )
+
+;; display available keys after 1 second delay
+(use-package which-key
+  :ensure t
+  :config (which-key-mode)
+  )
+
+(use-package ibuffer
+  :config (setq ibuffer-expert t)
+  :bind ("C-x C-b" . ibuffer))
+
+;; Ivy
+;;;;;;;;
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (setq ivy-height 10)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-display-style 'fancy)
+  :bind
+  ("C-x b" . ivy-switch-buffer))
+
+(use-package swiper
+  :ensure t)
+
+(use-package counsel
+  :ensure t
+  :bind
+  ("M-x"     . counsel-M-x)
+  ("M-y"     . counsel-yank-pop)
+  ("C-x C-f" . counsel-find-file)
+
+  ;; NOTE "C-c C-o" is bound to 'ivy-occur during the prompt for these
+  ("C-c s"   . counsel-grep-or-swiper)
+  ("C-c g"   . counsel-git-grep)
+  ("C-c u"   . swiper-all)
+
+  ("C-x f"   . counsel-recentf)
+
+  ("C-c f"   . counsel-describe-function)
+  ("C-c v"   . counsel-describe-variable)
+  ("C-c k"   . counsel-ag)
+  ("C-c i"   . counsel-imenu)
+  :config
+  (setq completion-in-region-function 'ivy-completion-in-region)
+  )
+
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
+(use-package ag)
+
+(use-package magit
+  :ensure t
+  :bind
+  ("C-x g" . magit-status)
+  :config
+  (setq magit-completing-read-function 'ivy-completing-read)
+  )
+
+;; completion pop-ups
+(use-package company
+  :ensure t
+  :defer t ;; company can be slow to initialise
+  :config (global-company-mode)
+  :bind
+  ("M-?" . company-complete))
+
+;; projectile and a project tree explorer
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dired-subtree
+  :ensure t
+  :demand
+  :bind
+  (:map dired-mode-map
+	("<enter>"        . dwim-toggle-or-open)
+	("<return>"       . dwim-toggle-or-open)
+	("<tab>"          . dwim-toggle-or-open)
+	("<down-mouse-1>" . mouse-dwim-to-toggle-or-open))
+  :config
+  (progn
+    ;; Function to customize the line prefixes (I simply indent the lines a bit)
+    ;; (setq dired-subtree-line-prefix (lambda (depth) (make-string (* 2 depth) ?\s)))
+    (setq dired-subtree-use-backgrounds nil)))
+
+
+(use-package projectile
+  :ensure t
+  :demand
+  :bind
+  ("C-c x" . toggle-project-explorer)
+  :config (projectile-global-mode t)
+  :init
+  (require 'project-explorer)
+  ;; (setq projectile-require-project-root nil)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'ivy)
+  ;; (setq projectile-indexing-method 'alien)
+  )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org-mode.org
+
+(use-package org
+  :ensure t
+  :bind
+  ("C-c l" . org-store-link)
+  ("C-c a" . org-agenda)
+  ("C-c c" . org-capture)
+
+  :config
+  (setq org-use-fast-todo-selection t)
+  (setq org-log-done 'time)
+
+  ;; (add-hook 'org-mode-hook 'turn-off-auto-fill)
+  ;; (add-hook 'org-mode-hook 'toggle-truncate-lines)
+  (add-hook 'org-mode-hook 'visual-line-mode)
+
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
+  (setq org-default-notes-file "~/org/notes.org")
+
+  ;(setq org-mobile-files (quote ("notes.org")))
+  ;(setq org-mobile-directory "~/Dropbox/MobileOrg")
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((dot . t) (plantuml . t)))
+
+  (setq org-plantuml-jar-path
+        (expand-file-name "~/org/plantuml.jar"))
+
+  (setq org-cycle-separator-lines 1)
+
+  ;; (setq org-agenda-files '("~/org"))
+  (setq org-agenda-files (list "~/Dropbox/MobileOrg/gtd.org"
+                               "~/Dropbox/MobileOrg/tim-calendar.org"
+                               "~/Dropbox/MobileOrg/karen-calendar.org"
+                               ))
+  (setq org-capture-templates
+     '(("t" "Todo" entry (file+headline "~/Dropbox/MobileOrg/gtd.org" "In-Box")
+            "* TODO %?\n  %i\n")
+       ("j" "Journal" entry (file+datetree "~/Dropbox/MobileOrg/journal.org")
+            "* %?\nEntered: %U\n  %i\n")))
+
+  )
+
+
+;; Sunrise
+;;tweak faces for paths
+(use-package sunrise-commander
+  :ensure t
+  :config
+  (set-face-attribute 'sr-active-path-face nil
+                      :background "black")
+  (set-face-attribute 'sr-passive-path-face nil
+                      :background "black")
+  )
+
+;; markdown
+(use-package markdown-mode
+  :ensure t
+  :mode "\\.\\(md\\|markdown\\)\\'"
+  :config (progn
+            (use-package pandoc-mode :ensure t)
+            (add-hook 'markdown-mode-hook
+                      (lambda ()
+                        (conditionally-turn-on-pandoc)
+                        (visual-line-mode)
+                        (flyspell-mode)
+                        (pandoc-mode)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; for emacs client
 (server-start)
-
-(put 'upcase-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
