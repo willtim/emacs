@@ -148,7 +148,7 @@
 (add-to-list 'safe-local-variable-values '(whitespace-line-column . 80))
 
 ;; Set this to whatever browser you use
-;; CHROME BROWSER SUPPORT
+;; At my place of work, I am forced to use Chrome
 ;;(setq browse-url-browser-function 'browse-url-generic
 ;;      browse-url-generic-program "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
 
@@ -193,46 +193,44 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Setup key bindings unrelated to any packages
 
-(bind-keys
+(bind-keys*
  ("M-o"     . other-window)
  ("C-x o"   . switch-window-then-swap-buffer)
  ("M-O"     . other-frame)
  ("C-x TAB" . indent-rigidly) ;; indent-rigidly
  ("M-p"     . backward-paragraph) ;; paragraph navigation
  ("M-n"     . forward-paragraph)
- ("C-M-h"   . backward-kill-word) ;; You know, like Readline.
  ("C-x \\"  . align-regexp) ;; Align your code in a pretty way.
  ("M-/"     . dabbrev-expand) ;; Completion - was hippie-expand
  ("M-c"     . toggle-char-case) ;; set this key to a similar but saner idea
  ("C-c C-g" . vc-git-grep2) ;; seems as fast as "ag"
  ("M-X"     . smex-major-mode-commands)
  ("C-c r"   . revert-buffer)
- ("C-c n"   . cleanup-buffer) ;; Perform general cleanup.
  ("C-<f5>"  . linum-mode) ;; add line-numbers to buffer
  ("C-h a"   . apropos) ;; Help should search more than just commands
  ("C-c b"   . copy-file-name-to-clipboard)) ;; copy file name to clipboard
 
 ;; Font size
-(bind-keys
+(bind-keys*
  ("C-+" . text-scale-increase)
  ("C--" . text-scale-decrease))
 
 ;; Use regex searches by default.
-(bind-keys
+(bind-keys*
   ("C-s"   . isearch-forward-regexp)
-  ("\C-r"  . isearch-backward-regexp)
+  ("C-r"   . isearch-backward-regexp)
   ("C-M-s" . isearch-forward)
   ("C-M-r" . isearch-backward))
 
 ;; Window re-sizing - that is friendly with org-mode
-(bind-keys
+(bind-keys*
   ("C-}" . enlarge-window-horizontally)
   ("C-{" . shrink-window-horizontally)
   ("C-^" . enlarge-window))
 
 ;; Start a regular shell
 ;; C-x m orginallytaken by 'compose-mail'
-(bind-key "C-x m" 'eshell)
+(bind-key* "C-x m" 'eshell)
 
 ;; Activate occur easily inside isearch
 (define-key isearch-mode-map (kbd "C-c C-o")
@@ -367,15 +365,18 @@
   :ensure t
   :init (drag-stuff-global-mode 1)
   :bind
-  ("S-M-p" . drag-stuff-up)
-  ("S-M-n" . drag-stuff-down)
+  ("M-P" . drag-stuff-up)
+  ("M-N" . drag-stuff-down)
   )
 
 (use-package paredit
   :ensure t
   :bind
+  ("C-M-f" . paredit-forward)
+  ("C-M-b" . paredit-backward)
   ("C-M-u" . paredit-backward-up)
   ("C-M-n" . paredit-forward-up)
+  ("C-M-d" . paredit-forward-down)
   ("M-S"   . paredit-splice-sexp)
   ("M-R"   . paredit-raise-sexp)
   ("M-("   . paredit-wrap-round)
@@ -449,7 +450,9 @@
 (use-package company
   :ensure t
   :defer t ;; company can be slow to initialise
-  :config (global-company-mode)
+  :config
+  (setq company-dabbrev-downcase nil) ;; switch-off a crazy default
+  (global-company-mode)
   :bind
   ("M-?" . company-complete))
 
@@ -549,6 +552,13 @@
 (use-package markdown-mode
   :ensure t
   :mode "\\.\\(md\\|markdown\\)\\'"
+  :bind
+  ;; Blocks in markdown-mode are code blocks, blockquotes, list
+  ;; items, headings, horizontal rules, or plain text paragraphs
+  ;; separated by whitespace.
+  (:map markdown-mode-map
+        ("M-p"     . markdown-forward-block)
+        ("M-n"     . markdown-backward-block))
   :config (progn
             (use-package pandoc-mode :ensure t)
             (add-hook 'markdown-mode-hook
