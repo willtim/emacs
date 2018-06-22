@@ -6,7 +6,7 @@
  '(browse-url-browser-function (quote browse-default-windows-browser))
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("5a0eee1070a4fc64268f008a4c7abfda32d912118e080e18c3c865ef864d1bea" "5b340b4eb24c3c006972f3bc3aee26b7068f89ba9580d9a4211c1db5d0a70ea2" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(cygwin-mount-cygwin-bin-directory "c:/cygwin64/bin")
  '(cygwin-mount-table t)
  '(flycheck-checkers
@@ -47,7 +47,7 @@
  '(org-gcal-down-days 90)
  '(package-selected-packages
    (quote
-    (org-capture org-install dired-x dired-subtree scala-mode flycheck-haskell haskell-mode nix-sandbox company-nixos-options nixos-options flycheck-pos-tip use-package counsel-projectile projectile yaml-mode which-key switch-window sunrise-x-tree sunrise-x-modeline sunrise-x-mirror sunrise-x-checkpoints solarized-theme smex project-local-variables paredit pandoc-mode ox-pandoc org-gcal org-download notify markdown-mode magit inf-ruby idris-mode idle-highlight-mode htmlize haskell-snippets graphviz-dot-mode git-gutter gist fsharp-mode find-file-in-project drag-stuff define-word cygwin-mount counsel caml calfw-gcal calfw auto-complete auctex ag)))
+    (apropospriate-theme badwolf-theme company swiper ivy org-capture org-install dired-x dired-subtree scala-mode flycheck-haskell haskell-mode nix-sandbox company-nixos-options nixos-options flycheck-pos-tip use-package counsel-projectile projectile yaml-mode which-key switch-window sunrise-x-tree sunrise-x-modeline sunrise-x-mirror sunrise-x-checkpoints solarized-theme smex project-local-variables paredit pandoc-mode ox-pandoc org-gcal org-download notify markdown-mode magit inf-ruby idris-mode idle-highlight-mode htmlize haskell-snippets graphviz-dot-mode git-gutter gist fsharp-mode find-file-in-project drag-stuff define-word cygwin-mount counsel caml calfw-gcal calfw auto-complete auctex ag)))
  '(switch-window-increase 6)
  '(switch-window-shortcut-style (quote qwerty)))
 
@@ -74,4 +74,4 @@
  ;; If there is more than one, they won't work right.
  '(markdown-code-face ((t (:inherit nil :background "#fbf1d4" :family "Consolas"))))
  '(org-todo ((t (:foreground "firebrick" :weight bold))))
- '(which-func ((t (:foreground "gold")))))
+ '(which-func ((t (:foreground "gold" :weight extra-bold)))))

@@ -108,7 +108,7 @@
 
 ;; (defvar haskell-process-use-ghci nil)
 ;; (setq haskell-process-type 'cabal-repl)
-(setq haskell-process-type 'ghci)
+(setq haskell-process-type 'cabal-repl)
 
 (setq haskell-process-wrapper-function
      '(lambda (args) (apply 'nix-shell-command (nix-current-sandbox) args)))

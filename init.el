@@ -1,7 +1,7 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; Tim Williams' emacs configuration
-;; Last Updated: August 2017
+;; Last Updated: January 2018
 
 ;; disable parts of UI early in startup to avoid momentary display
 (tool-bar-mode -1)
@@ -19,8 +19,11 @@
 (require 'package)
 (setq package-user-dir (concat dotfiles-dir "elpa"))
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
+                       ;;  ("marmalade" . "https://marmalade-repo.org/packages/")
+                       ;;  ("melpa" . "https://melpa.org/packages/")))
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ))
+
 (package-initialize)
 ;;;;;;;;;;;;;;;;;;;;
 
@@ -32,6 +35,19 @@
 
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 (add-to-list 'default-frame-alist '(alpha 100 100))
+
+;; load this early
+;; (use-package apropospriate-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'apropospriate-dark t)
+;;   ;; apropospriate theme -- I want to better see the border of an inactive window
+;;   (set-face-attribute 'mode-line-inactive nil
+;;                       :box '(:line-width 1 :color "#303030" :style nil)
+;;                       :background "#474747" :foreground "#9E9E9E" :height 0.95)
+;;   (set-face-attribute 'mode-line nil
+;;                       :box '(:line-width 1 :color "#303030" :style nil))
+;;   )
 
 ;; load this early
 (use-package solarized-theme
@@ -401,9 +417,10 @@
   :ensure t
   :config
   (ivy-mode 1)
-  (setq ivy-height 10)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-display-style 'fancy)
+  (setq ivy-height 10
+        ivy-use-virtual-buffers t
+        ivy-display-style 'fancy
+        ivy-count-format "%d/%d ")
   :bind
   ("C-x b" . ivy-switch-buffer))
 
@@ -433,10 +450,13 @@
   )
 
 (use-package yasnippet
+  :ensure t
   :config
   (yas-global-mode 1))
 
-(use-package ag)
+(use-package ag
+  :ensure t
+  )
 
 (use-package magit
   :ensure t
@@ -534,6 +554,14 @@
        ("j" "Journal" entry (file+datetree "~/Dropbox/MobileOrg/journal.org")
             "* %?\nEntered: %U\n  %i\n")))
 
+  ;;(require 'calfw)
+  ;;(require 'calfw-org)
+  ;;(require 'org-gcal)
+  ;; (setq org-gcal-client-id "475236531230-d4cue8pvr2cqe2mibdqk6l21c3q0oeel.apps.googleusercontent.com"
+  ;;       org-gcal-client-secret "oSbcQr0FlkzxjZeg269Zd1zN"
+  ;;       org-gcal-file-alist '(("tim.philip.williams@gmail.com" .  "~/Dropbox/MobileOrg/tim-calendar.org")
+  ;;                             ("karencornish@hotmail.co.uk"    .  "~/Dropbox/MobileOrg/karen-calendar.org")
+  ;;                             ))
   )
 
 
