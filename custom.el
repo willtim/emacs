@@ -47,7 +47,7 @@
  '(org-gcal-down-days 90)
  '(package-selected-packages
    (quote
-    (apropospriate-theme badwolf-theme company swiper ivy org-capture org-install dired-x dired-subtree scala-mode flycheck-haskell haskell-mode nix-sandbox company-nixos-options nixos-options flycheck-pos-tip use-package counsel-projectile projectile yaml-mode which-key switch-window sunrise-x-tree sunrise-x-modeline sunrise-x-mirror sunrise-x-checkpoints solarized-theme smex project-local-variables paredit pandoc-mode ox-pandoc org-gcal org-download notify markdown-mode magit inf-ruby idris-mode idle-highlight-mode htmlize haskell-snippets graphviz-dot-mode git-gutter gist fsharp-mode find-file-in-project drag-stuff define-word cygwin-mount counsel caml calfw-gcal calfw auto-complete auctex ag)))
+    (treemacs-icons-dired treemacs anki-editor apropospriate-theme badwolf-theme company swiper ivy org-capture org-install dired-x dired-subtree scala-mode flycheck-haskell haskell-mode nix-sandbox company-nixos-options nixos-options flycheck-pos-tip use-package counsel-projectile projectile yaml-mode which-key switch-window sunrise-x-tree sunrise-x-modeline sunrise-x-mirror sunrise-x-checkpoints solarized-theme smex project-local-variables paredit pandoc-mode ox-pandoc org-gcal org-download notify markdown-mode magit inf-ruby idris-mode idle-highlight-mode htmlize haskell-snippets graphviz-dot-mode git-gutter gist fsharp-mode find-file-in-project drag-stuff define-word cygwin-mount counsel caml calfw-gcal calfw auto-complete auctex ag)))
  '(switch-window-increase 6)
  '(switch-window-shortcut-style (quote qwerty)))
 
