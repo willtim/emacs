@@ -11,6 +11,12 @@
 (setq initial-scratch-message nil)
 (tooltip-mode 0)
 
+(when (string-equal system-type "windows-nt")
+  (setq exec-path
+        '("C:/cygwin64/bin"
+          "C:/Program Files (x86)/Emacs/bin/"
+          )))
+
 ;;;;;;;;;;;;;;;;; Load up ELPA, the package manager
 ;; Load path etc.
 
@@ -222,7 +228,7 @@
  ("C-c C-g" . vc-git-grep2) ;; seems as fast as "ag"
  ("M-X"     . smex-major-mode-commands)
  ("C-c r"   . revert-buffer)
- ("C-<f5>"  . linum-mode) ;; add line-numbers to buffer
+ ("C-<f5>"  . display-line-numbers-mode) ;; add line-numbers to buffer
  ("C-h a"   . apropos) ;; Help should search more than just commands
  ("C-c b"   . copy-file-name-to-clipboard)) ;; copy file name to clipboard
 
@@ -366,8 +372,6 @@
         ;; problems with remote files
         recentf-auto-cleanup 'never)
   (recentf-mode +1))
-
-(use-package linum)
 
 (use-package uniquify
   :config
