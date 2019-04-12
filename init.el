@@ -546,9 +546,9 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;; (use-package treemacs-projectile
-;;   :after treemacs projectile
-;;   :ensure t)
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
 
 (use-package treemacs-icons-dired
   :after treemacs dired
@@ -559,16 +559,16 @@
   :after treemacs magit
   :ensure t)
 
-;; (use-package projectile
-;;   :ensure t
-;;   :demand
-;;   :config (projectile-global-mode t)
-;;   :init
-;;   ;; (setq projectile-require-project-root nil)
-;;   (setq projectile-enable-caching t)
-;;   (setq projectile-completion-system 'ivy)
-;;   ;; (setq projectile-indexing-method 'alien)
-;;   )
+(use-package projectile
+  :ensure t
+  :demand
+  :config (projectile-global-mode t)
+  :init
+  ;; (setq projectile-require-project-root nil)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'ivy)
+  ;; (setq projectile-indexing-method 'alien)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode.org
@@ -647,7 +647,14 @@
                         (flyspell-mode)
                         (pandoc-mode)))))
 
+;; PDF-Tools
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
 
+(use-package org-pdfview
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
