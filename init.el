@@ -210,14 +210,14 @@
 (add-to-list 'load-path "~/.emacs.d/lisp" load-path)
 (require 'markerpen)
 (require 'tim-utils)
-(require 'tim-haskell)
+(require 'tim-haskell) ;; a hacked-up version for my Win10 box
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Setup key bindings unrelated to any packages
 
 (bind-keys*
  ("M-o"     . other-window)
- ("C-x o"   . switch-window-then-swap-buffer)
+ ("C-x o"   . window-swap-states)
  ("M-O"     . other-frame)
  ("C-x TAB" . indent-rigidly) ;; indent-rigidly
  ("M-p"     . backward-paragraph) ;; paragraph navigation
