@@ -581,6 +581,9 @@
   ("C-c c" . org-capture)
 
   :config
+
+  (setq org-todo-keywords '((type "TODO(t@/!)" "IN-PROGRESS(i@/!)" "WAITING(w@/!)" "|" "DONE(d@/!)" "CANCELLED(c@/!)")))
+
   (setq org-use-fast-todo-selection t)
   (setq org-log-done 'time)
 
@@ -592,9 +595,6 @@
 
   (setq org-default-notes-file "~/org/notes.org")
 
-  ;(setq org-mobile-files (quote ("notes.org")))
-  ;(setq org-mobile-directory "~/Dropbox/MobileOrg")
-
   (org-babel-do-load-languages
    'org-babel-load-languages '((dot . t) (plantuml . t)))
 
@@ -603,16 +603,18 @@
 
   (setq org-cycle-separator-lines 1)
 
-  ;; (setq org-agenda-files '("~/org"))
-  (setq org-agenda-files (list "~/Dropbox/MobileOrg/gtd.org"
-                               "~/Dropbox/MobileOrg/tim-calendar.org"
-                               "~/Dropbox/MobileOrg/karen-calendar.org"
-                               ))
+  (setq org-refile-use-outline-path nil)     ; Show full paths for refiling
+  (setq org-refile-targets
+      '((nil :maxlevel . 3)
+        (org-agenda-files :maxlevel . 3)))
+
+  (setq org-agenda-files '("~/org"))
+
   (setq org-capture-templates
-     '(("t" "Todo" entry (file+headline "~/Dropbox/MobileOrg/gtd.org" "In-Box")
+     '(("t" "Todo" entry (file+headline "~/org/notes.org" "Inbox")
             "* TODO %?\n  %i\n")
-       ("j" "Journal" entry (file+datetree "~/Dropbox/MobileOrg/journal.org")
-            "* %?\nEntered: %U\n  %i\n")))
+       ("j" "Journal" entry (file+datetree "~/org/notes.org")
+            "* %?\n%U\n  %i\n")))
   )
 
 
