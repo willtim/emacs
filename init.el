@@ -210,14 +210,14 @@
 (add-to-list 'load-path "~/.emacs.d/lisp" load-path)
 (require 'markerpen)
 (require 'tim-utils)
-(require 'tim-haskell)
+(require 'tim-haskell) ;; a hacked-up version for my Win10 box
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Setup key bindings unrelated to any packages
 
 (bind-keys*
  ("M-o"     . other-window)
- ("C-x o"   . switch-window-then-swap-buffer)
+ ("C-x o"   . window-swap-states)
  ("M-O"     . other-frame)
  ("C-x TAB" . indent-rigidly) ;; indent-rigidly
  ("M-p"     . backward-paragraph) ;; paragraph navigation
@@ -546,9 +546,9 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;; (use-package treemacs-projectile
-;;   :after treemacs projectile
-;;   :ensure t)
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
 
 (use-package treemacs-icons-dired
   :after treemacs dired
@@ -559,16 +559,16 @@
   :after treemacs magit
   :ensure t)
 
-;; (use-package projectile
-;;   :ensure t
-;;   :demand
-;;   :config (projectile-global-mode t)
-;;   :init
-;;   ;; (setq projectile-require-project-root nil)
-;;   (setq projectile-enable-caching t)
-;;   (setq projectile-completion-system 'ivy)
-;;   ;; (setq projectile-indexing-method 'alien)
-;;   )
+(use-package projectile
+  :ensure t
+  :demand
+  :config (projectile-global-mode t)
+  :init
+  ;; (setq projectile-require-project-root nil)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'ivy)
+  ;; (setq projectile-indexing-method 'alien)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org-mode.org
@@ -649,7 +649,14 @@
                         (flyspell-mode)
                         (pandoc-mode)))))
 
+;; PDF-Tools
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
 
+(use-package org-pdfview
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
