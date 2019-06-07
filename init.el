@@ -58,6 +58,7 @@
 ;; load this early
 (use-package solarized-theme
   :ensure t
+  :pin melpa-stable
   :demand
   :bind
   ;; toggle light/dark theme
@@ -341,6 +342,7 @@
 
 (use-package flyspell
   :ensure t
+  :pin melpa-stable
   :config
   (setq table-disable-incompatibility-warning t)
   (setq ispell-dictionary "british")
@@ -356,6 +358,7 @@
 
 (use-package smex
   :ensure t
+  :pin melpa-stable
   :init (smex-initialize))
 (use-package cl)
 (use-package saveplace)
@@ -383,6 +386,7 @@
 
 (use-package drag-stuff
   :ensure t
+  :pin melpa-stable
   :init (drag-stuff-global-mode 1)
   :bind
   ("M-P" . drag-stuff-up)
@@ -391,6 +395,7 @@
 
 (use-package paredit
   :ensure t
+  :pin melpa-stable
   :bind
   ("C-M-f" . paredit-forward)
   ("C-M-b" . paredit-backward)
@@ -408,6 +413,7 @@
 ;; display available keys after 1 second delay
 (use-package which-key
   :ensure t
+  :pin melpa-stable
   :config (which-key-mode)
   )
 
@@ -419,6 +425,7 @@
 ;;;;;;;;
 (use-package ivy
   :ensure t
+  :pin melpa-stable
   :config
   (ivy-mode 1)
   (setq ivy-height 10
@@ -430,10 +437,12 @@
   ("C-x b" . ivy-switch-buffer))
 
 (use-package swiper
-  :ensure t)
+  :ensure t
+  :pin melpa-stable)
 
 (use-package counsel
   :ensure t
+  :pin melpa-stable
   :bind
   ("M-x"     . counsel-M-x)
   ("M-y"     . counsel-yank-pop)
@@ -448,7 +457,7 @@
 
   ("C-c f"   . counsel-describe-function)
   ("C-c v"   . counsel-describe-variable)
-  ("C-c k"   . counsel-ag)
+  ("C-c k"   . counsel-rg)
   ("C-c i"   . counsel-imenu)
   :config
   (setq completion-in-region-function 'ivy-completion-in-region)
@@ -456,15 +465,16 @@
 
 (use-package yasnippet
   :ensure t
+  :pin melpa-stable
   :config
   (yas-global-mode 1))
 
-(use-package ag
-  :ensure t
-  )
+(use-package ripgrep
+  :ensure t)
 
 (use-package magit
   :ensure t
+  :pin melpa-stable
   :bind
   ("C-x g" . magit-status)
   :config
@@ -474,6 +484,7 @@
 ;; completion pop-ups
 (use-package company
   :ensure t
+  :pin melpa-stable
   :defer t ;; company can be slow to initialise
   :config
   (setq company-dabbrev-downcase nil) ;; switch-off a crazy default
@@ -481,88 +492,31 @@
   :bind
   ("M-?" . company-complete))
 
-;; Treemacs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package treemacs
+;; NOTE: currently only in Melpa
+(use-package dired-sidebar
+  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
   :ensure t
-  :defer t
+  :commands (dired-sidebar-toggle-sidebar)
   :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
   :config
-  (progn
-    (setq treemacs-collapse-dirs                 (if (executable-find "python") 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         35)
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+  (setq dired-sidebar-subtree-line-prefix "__")
+  (setq dired-sidebar-theme 'nerd)
+  (setq dired-sidebar-use-term-integration t)
+  (setq dired-sidebar-use-custom-font t))
 
-    ;; The default width and height of the icons is 22 pixels. If you are
-    ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
-
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    (pcase (cons (not (null (executable-find "git")))
-                 (not (null (executable-find "python3"))))
-      (`(t . t)
-       (treemacs-git-mode 'deferred))
-      (`(t . _)
-       (treemacs-git-mode 'simple))))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t 1"   . treemacs-delete-other-windows)
-        ("C-x t t"   . treemacs)
-        ("C-x t B"   . treemacs-bookmark)
-        ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
-
-(use-package treemacs-projectile
-  :after treemacs projectile
-  :ensure t)
-
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
-
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
-
+;; NOTE: potentially issues with using from network shares
 (use-package projectile
   :ensure t
-  :demand
-  :config (projectile-global-mode t)
+  :pin melpa-stable
+  :config
+  (projectile-global-mode t)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   :init
   ;; (setq projectile-require-project-root nil)
   (setq projectile-enable-caching t)
@@ -575,6 +529,7 @@
 
 (use-package org
   :ensure t
+  :pin melpa-stable
   :bind
   ("C-c l" . org-store-link)
   ("C-c a" . org-agenda)
@@ -617,21 +572,10 @@
             "* %?\n%U\n  %i\n")))
   )
 
-
-;; Sunrise
-;;tweak faces for paths
-(use-package sunrise-commander
-  :ensure t
-  :config
-  (set-face-attribute 'sr-active-path-face nil
-                      :background "black")
-  (set-face-attribute 'sr-passive-path-face nil
-                      :background "black")
-  )
-
 ;; markdown
 (use-package markdown-mode
   :ensure t
+  :pin melpa-stable
   :mode "\\.\\(md\\|markdown\\)\\'"
   :bind
   ;; Blocks in markdown-mode are code blocks, blockquotes, list
