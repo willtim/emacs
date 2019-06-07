@@ -450,7 +450,7 @@
 
   ;; NOTE "C-c C-o" is bound to 'ivy-occur during the prompt for these
   ("C-c s"   . counsel-grep-or-swiper)
-  ("C-c g"   . counsel-git-grep)
+  ;; ("C-c g"   . counsel-git-grep) ; use vc-git-grep2 or counsel-projectile-grep instead
   ("C-c u"   . swiper-all)
 
   ("C-x f"   . counsel-recentf)
