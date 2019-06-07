@@ -463,6 +463,15 @@
   (setq completion-in-region-function 'ivy-completion-in-region)
   )
 
+(use-package counsel-etags
+  :ensure t
+  :pin melpa-stable)
+
+;; NOTE "C-c p s g" for counsel-projectile-grep
+(use-package counsel-projectile
+  :ensure t
+  :pin melpa-stable)
+
 (use-package yasnippet
   :ensure t
   :pin melpa-stable
@@ -522,6 +531,7 @@
   (setq projectile-enable-caching t)
   (setq projectile-completion-system 'ivy)
   ;; (setq projectile-indexing-method 'alien)
+  (setq projectile-file-exists-local-cache-expire (* 5 60)) ;; workaround freezes on slow SMB shares
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -551,7 +561,10 @@
   (setq org-default-notes-file "~/org/notes.org")
 
   (org-babel-do-load-languages
-   'org-babel-load-languages '((dot . t) (plantuml . t)))
+   'org-babel-load-languages '((dot . t) (plantuml . t) (haskell . t)))
+
+    ;; stop annoying confirmations at the expense of security
+  (setq org-confirm-babel-evaluate nil)
 
   (setq org-plantuml-jar-path
         (expand-file-name "~/org/plantuml.jar"))
