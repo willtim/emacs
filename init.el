@@ -186,26 +186,6 @@
 (add-to-list 'completion-ignored-extensions ".hi")
 (add-to-list 'completion-ignored-extensions ".prof_o")
 (setq ido-ignore-files '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "\\.o$" "\\.hi" "\\.exe"))
-(setq dired-omit-extension '(".hi" ".p_hi" ".o" ".a"))
-
-(setq
-  dired-isearch-filenames 'dwim
-  dired-dwim-target t
-  dired-omit-extension '(".hi" ".p_hi" ".o" ".a")
-  dired-listing-switches "-alh"
-)
-
-(add-hook
- 'dired-mode-hook
- (lambda ()
-   (dired-omit-mode 1) ;; see above
-   (define-key dired-mode-map "z" 'dired-zip-files)
-   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-   (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
-;   (define-key dired-mode-map (kbd "M-RET") 'dired-w32-browser) ;; to open files with windows
-;   (define-key dired-mode-map (kbd "W") 'dired-w32explore) ;; to open directories in Win explorer
-;   (define-key dired-mode-map (kbd "E") 'wdired-change-to-wdired-mode)
-   ))
 
 ;; local packages
 (add-to-list 'load-path "~/.emacs.d/lisp" load-path)
@@ -318,9 +298,6 @@
 ;; Ben's suggestion to stop too much output killing emacs
 (setq comint-buffer-maximum-size 9999)
 
-(put 'upcase-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
-
 ;; nxml
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . nxml-mode))
 (setq auto-mode-alist
@@ -329,16 +306,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Packages
-
-;; Session management via Emacs Desktop
-;; NB. file-related behavior
-(use-package desktop
-  :config
-  (setq desktop-path '("~/.emacs.d/"))
-  (setq desktop-dirname "~/.emacs.d/")
-  (setq desktop-base-file-name "emacs-desktop")
-  (desktop-save-mode 1)
-  )
 
 (use-package flyspell
   :ensure t
@@ -352,9 +319,36 @@
 ;; C-x C-j for open dired at current
 (use-package dired-x
   :config
-  (setq-default dired-omit-files-p t) ; Buffer-local variable
+  ;; (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")) ;; omit dotfiles
+  (setq
+   dired-isearch-filenames 'dwim
+   dired-dwim-target t
+   dired-omit-extension '(".hi" ".p_hi" ".o" ".a")
+   dired-listing-switches "-alh"
+   )
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (dired-omit-mode 1)
+     (define-key dired-mode-map "z" 'dired-zip-files)
+     (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+     (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))
+   ))
   )
+
+;; (use-package w32-browser
+;;   :ensure t
+;;   :pin melpa-stable
+;;   :config
+;;     (add-hook
+;;    'dired-mode-hook
+;;    (lambda ()
+;;      (define-key dired-mode-map (kbd "M-RET") 'dired-w32-browser) ;; to open files with windows
+;;      (define-key dired-mode-map (kbd "W") 'dired-w32explore) ;; to open directories in Win explorer
+;; ;   (define-key dired-mode-map (kbd "E") 'wdired-change-to-wdired-mode)
+;;    ))
+;;   )
 
 (use-package smex
   :ensure t
@@ -614,6 +608,16 @@
 
 (use-package org-pdfview
   :ensure t)
+
+;; Session management via Emacs Desktop
+;; NB. file-related behavior
+(use-package desktop
+  :config
+  (setq desktop-path '("~/.emacs.d/"))
+  (setq desktop-dirname "~/.emacs.d/")
+  (setq desktop-base-file-name "emacs-desktop")
+  (desktop-save-mode 1)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
