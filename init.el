@@ -196,13 +196,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Setup key bindings unrelated to any packages
 
+;; NOTE: These bindings go in override-global-map and will take
+;; precedence over any other mode maps.
 (bind-keys*
  ("M-o"     . other-window)
  ("C-x o"   . window-swap-states)
  ("M-O"     . other-frame)
  ("C-x TAB" . indent-rigidly) ;; indent-rigidly
- ("M-p"     . backward-paragraph) ;; paragraph navigation
- ("M-n"     . forward-paragraph)
  ("C-x \\"  . align-regexp) ;; Align your code in a pretty way.
  ("M-/"     . dabbrev-expand) ;; Completion - was hippie-expand
  ("M-c"     . toggle-char-case) ;; set this key to a similar but saner idea
@@ -538,6 +538,8 @@
   ("C-c l" . org-store-link)
   ("C-c a" . org-agenda)
   ("C-c c" . org-capture)
+  ("M-p"   . backward-paragraph) ;; paragraph navigation
+  ("M-n"   . forward-paragraph)
 
   :config
 
