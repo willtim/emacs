@@ -27,27 +27,46 @@
 
 (defconst markerpens '())
 
+;; Disable simple background-only pens, as they do not work so well with solarised.
+(defconst markerpen-initial-pen-colours '())
 ;; Background colour marker pens - these can be used nicely together with font-lock
-(defconst markerpen-initial-pen-colours '("dark red" ; markerpen1
-					  "gray24"   ; markerpen2
-					  "gold4"    ; markerpen3
-					  "navy"     ; markerpen4
-					  ))
-;; More general face-adjusting pens
-(defconst markerpen-initial-pen-attrs '((face . markerpen-face-a) ; markerpen5
-					(face . markerpen-face-b) ; markerpen6
-					(face . markerpen-face-c) ; markerpen7
-					(face . markerpen-face-d) ; markerpen8
-					(face . markerpen-face-e) ; markerpen9
-					(face . markerpen-face-f) ; markerpen10
-					))
+;; (defconst markerpen-initial-pen-colours '("dark red" ; markerpen1
+;; 					  "gray24"   ; markerpen2
+;; 					  "gold4"    ; markerpen3
+;; 					  "navy"     ; markerpen4
+;; 					  ))
 
-(defface markerpen-face-a '((t :underline "red")) "MarkerPen")
-(defface markerpen-face-b '((t :weight bold :slant italic)) "MarkerPen")
-(defface markerpen-face-c '((t :weight bold :height 1.8 :inherit variable-pitch)) "MarkerPen")
-(defface markerpen-face-d '((t :foreground "yellow")) "MarkerPen")
-(defface markerpen-face-e '((t :foreground "red")) "MarkerPen")
-(defface markerpen-face-f '((t :foreground "gray24")) "MarkerPen")
+
+
+;; More general face-adjusting pens
+(defconst markerpen-initial-pen-attrs '((face . markerpen-face-a) ; markerpen1
+                                        (face . markerpen-face-b) ; markerpen2
+                                        (face . markerpen-face-c) ; markerpen3
+                                        (face . markerpen-face-d) ; markerpen4
+                                        (face . markerpen-face-e) ; markerpen5
+                                        (face . markerpen-face-f) ; markerpen6
+                                        ))
+(defface markerpen-face-a '((t :foreground "black" :background "yellow")) "MarkerPen")
+(defface markerpen-face-b '((t :foreground "black" :background "orange")) "MarkerPen")
+(defface markerpen-face-c '((t :foreground "black" :background "pink")) "MarkerPen")
+(defface markerpen-face-d '((t :underline "red")) "MarkerPen")
+(defface markerpen-face-e '((t :weight bold :slant italic)) "MarkerPen")
+(defface markerpen-face-f '((t :weight bold :height 1.8 :inherit variable-pitch)) "MarkerPen")
+
+;; (defconst markerpen-initial-pen-attrs '((face . markerpen-face-a) ; markerpen5
+;; 					(face . markerpen-face-b) ; markerpen6
+;; 					(face . markerpen-face-c) ; markerpen7
+;; 					(face . markerpen-face-d) ; markerpen8
+;; 					(face . markerpen-face-e) ; markerpen9
+;; 					(face . markerpen-face-f) ; markerpen10
+;; 					))
+
+;; (defface markerpen-face-a '((t :underline "red")) "MarkerPen")
+;; (defface markerpen-face-b '((t :weight bold :slant italic)) "MarkerPen")
+;; (defface markerpen-face-c '((t :weight bold :height 1.8 :inherit variable-pitch)) "MarkerPen")
+;; (defface markerpen-face-d '((t :foreground "yellow")) "MarkerPen")
+;; (defface markerpen-face-e '((t :foreground "red")) "MarkerPen")
+;; (defface markerpen-face-f '((t :foreground "gray24")) "MarkerPen")
 
 (defun markerpen-with-number (num)
   (intern (format "markerpen%d" num)))
